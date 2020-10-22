@@ -26,12 +26,39 @@ The parameter $H$ is still the average number of hours of work reported by stude
 
 Review the Cardinal Virtues which serve as our guide for data science. Under Justice, is this model predictive or causal? What would the Preceptor Table look like? Write down the mathematical model we are using.
 
+```{r sc1}
+fit_obj <- stan_glm(data = qscores, # Define data source
+                    hours ~ 1, # Outcome on left, predictor on right.
+                    family = gaussian(), # What kind of distribution
+                    refresh = 0)
+
+fit_obj
+
+# Intercept Median is the mean of the data.
+```
 
 
 ## Scene 2
 
 **Prompt:** Create a plot of the posterior probability distribution for $H$. Interpret the plot. 
 
+```{r sc2}
+fit_obj <- stan_glm(data = qscores, # Define data source
+                    hours ~ 1, # Outcome on left, predictor on right.
+                    family = gaussian(), # What kind of distribution
+                    refresh = 0)
+
+fit_obj %>%
+  as_tibble() %>%
+  rename(hours = "(Intercept)") %>%
+  ggplot(aes(x = hours)) +
+ geom_histogram(aes(y = after_stat(count / sum(count))),
+                binwidth = 0.01,
+                color = "white") +
+  labs(x = "Hours (Median)", y = "Probability")
+
+fit_obj
+```
 
 
 
@@ -47,6 +74,9 @@ Define D as the number of hours difference between the workload of two randomly 
 
 What is your posterior probability distribution for D? 
 
+```{r sc3}
+posterior_predict(fit_obj)
+```
 
 
 
